@@ -10,6 +10,7 @@ import { MoonCalendar } from './components/MoonCalendar';
 import { MoonJournal } from './components/MoonJournal';
 import { MoonWidget } from './components/MoonWidget';
 import { EclipseTracker } from './components/EclipseTracker';
+import { MoonDetail } from './components/MoonDetail';
 import { getMoonData, getMoonPhaseIcon } from './lib/moon';
 import { Moon as MoonIcon, Sparkles, Info, Calendar as CalendarIcon, Book, Globe, Settings, X, Home, Sun } from 'lucide-react';
 
@@ -78,7 +79,7 @@ export default function App() {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 20 }}
-              className="flex-1"
+              className="flex-1 space-y-6"
             >
               <MoonCalendar 
                 selectedDate={selectedDate} 
@@ -87,6 +88,8 @@ export default function App() {
                   setSelectedDate(date);
                 }} 
               />
+              
+              <MoonDetail moonData={moonData} date={selectedDate} />
             </motion.div>
           )}
 
@@ -96,9 +99,30 @@ export default function App() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="flex-1"
+              className="flex-1 space-y-6"
             >
               <MoonJournal date={selectedDate} />
+              
+              {/* Quick Info Card for Journal */}
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="glass-panel p-4 flex items-start gap-4"
+              >
+                <div className="p-2 bg-white/5 rounded-lg">
+                  <Sparkles className="w-5 h-5 text-amber-200/60" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-medium text-slate-200">Aperçu Lunaire</h4>
+                  <p className="text-xs text-slate-400 leading-relaxed mt-1">
+                    {moonData.phaseName === 'Pleine Lune' && "Un moment de culmination, d'émotions intenses et de clarté. Libérez ce qui ne vous sert plus."}
+                    {moonData.phaseName === 'Nouvelle Lune' && "Une page blanche pour de nouveaux départs. Plantez les graines de vos intentions pour ce cycle."}
+                    {moonData.phaseName.includes('Croissant') || moonData.phaseName.includes('Gibbeuse Croissante') ? "L'énergie augmente. Concentrez-vous sur la croissance, l'action et la manifestation." : ""}
+                    {moonData.phaseName.includes('Décroissante') || moonData.phaseName.includes('Dernier Croissant') ? "Une période de réflexion, d'introspection et de lâcher-prise." : ""}
+                    {moonData.phaseName.includes('Quartier') && "Un tournant. Équilibrez votre monde intérieur avec les exigences extérieures."}
+                  </p>
+                </div>
+              </motion.div>
             </motion.div>
           )}
 
@@ -114,29 +138,6 @@ export default function App() {
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* Quick Info Card (Only on Calendar/Journal views) */}
-        {(view === 'calendar' || view === 'journal') && (
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="glass-panel p-4 flex items-start gap-4"
-          >
-            <div className="p-2 bg-white/5 rounded-lg">
-              <Sparkles className="w-5 h-5 text-amber-200/60" />
-            </div>
-            <div>
-              <h4 className="text-sm font-medium text-slate-200">Aperçu Lunaire</h4>
-              <p className="text-xs text-slate-400 leading-relaxed mt-1">
-                {moonData.phaseName === 'Pleine Lune' && "Un moment de culmination, d'émotions intenses et de clarté. Libérez ce qui ne vous sert plus."}
-                {moonData.phaseName === 'Nouvelle Lune' && "Une page blanche pour de nouveaux départs. Plantez les graines de vos intentions pour ce cycle."}
-                {moonData.phaseName.includes('Croissant') || moonData.phaseName.includes('Gibbeuse Croissante') ? "L'énergie augmente. Concentrez-vous sur la croissance, l'action et la manifestation." : ""}
-                {moonData.phaseName.includes('Décroissante') || moonData.phaseName.includes('Dernier Croissant') ? "Une période de réflexion, d'introspection et de lâcher-prise." : ""}
-                {moonData.phaseName.includes('Quartier') && "Un tournant. Équilibrez votre monde intérieur avec les exigences extérieures."}
-              </p>
-            </div>
-          </motion.div>
-        )}
       </main>
 
       {/* Settings Modal */}

@@ -23,16 +23,16 @@ export const EclipseTracker: React.FC = () => {
       </div>
       
       <div className="flex-1 min-w-0">
-        <div className="flex justify-between items-start mb-1">
+        <div className="flex flex-col mb-2">
           <h4 className="text-sm font-bold text-slate-200 capitalize">
             {format(parseISO(eclipse.date), 'd MMMM yyyy', { locale: fr })}
           </h4>
-          <span className={`text-[9px] uppercase tracking-widest px-2 py-0.5 rounded-full border ${
-            eclipse.type === 'Totale' ? 'border-amber-500/30 text-amber-500 bg-amber-500/5' : 
-            eclipse.type === 'Annulaire' ? 'border-blue-500/30 text-blue-500 bg-blue-500/5' :
-            'border-slate-500/30 text-slate-400 bg-slate-500/5'
+          <span className={`text-[10px] font-bold uppercase tracking-wider mt-0.5 ${
+            eclipse.type === 'Totale' ? 'text-amber-500' : 
+            eclipse.type === 'Annulaire' ? 'text-blue-400' :
+            'text-slate-400'
           }`}>
-            {eclipse.type}
+            Éclipse {eclipse.type}
           </span>
         </div>
         <p className="text-xs text-slate-400 leading-relaxed line-clamp-2">
