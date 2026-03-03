@@ -9,14 +9,15 @@ import { format } from 'date-fns';
 import { MoonCalendar } from './components/MoonCalendar';
 import { MoonJournal } from './components/MoonJournal';
 import { MoonWidget } from './components/MoonWidget';
+import { EclipseTracker } from './components/EclipseTracker';
 import { getMoonData, getMoonPhaseIcon } from './lib/moon';
-import { Moon as MoonIcon, Sparkles, Info, Calendar as CalendarIcon, Book, Globe, Settings, X, Home } from 'lucide-react';
+import { Moon as MoonIcon, Sparkles, Info, Calendar as CalendarIcon, Book, Globe, Settings, X, Home, Sun } from 'lucide-react';
 
 export default function App() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [timezone, setTimezone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone);
   const [moonData, setMoonData] = useState(getMoonData(new Date(), timezone));
-  const [view, setView] = useState<'home' | 'calendar' | 'journal'>('home');
+  const [view, setView] = useState<'home' | 'calendar' | 'journal' | 'eclipses'>('home');
   const [showSettings, setShowSettings] = useState(false);
   const [tzSearch, setTzSearch] = useState('');
 
@@ -100,10 +101,22 @@ export default function App() {
               <MoonJournal date={selectedDate} />
             </motion.div>
           )}
+
+          {view === 'eclipses' && (
+            <motion.div
+              key="eclipses"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="flex-1"
+            >
+              <EclipseTracker />
+            </motion.div>
+          )}
         </AnimatePresence>
 
         {/* Quick Info Card (Only on Calendar/Journal views) */}
-        {view !== 'home' && (
+        {(view === 'calendar' || view === 'journal') && (
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -212,7 +225,7 @@ export default function App() {
           <button
             onClick={() => setView('home')}
             className={cn(
-              "flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-all",
+              "flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-all",
               view === 'home' ? "bg-white/10 text-moon-glow" : "text-slate-500 hover:text-slate-300"
             )}
           >
@@ -223,18 +236,29 @@ export default function App() {
           <button
             onClick={() => setView('calendar')}
             className={cn(
-              "flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-all",
+              "flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-all",
               view === 'calendar' ? "bg-white/10 text-moon-glow" : "text-slate-500 hover:text-slate-300"
             )}
           >
             <CalendarIcon className="w-5 h-5" />
             <span className="text-[10px] uppercase tracking-tighter font-bold">Cycle</span>
           </button>
+
+          <button
+            onClick={() => setView('eclipses')}
+            className={cn(
+              "flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-all",
+              view === 'eclipses' ? "bg-white/10 text-moon-glow" : "text-slate-500 hover:text-slate-300"
+            )}
+          >
+            <Sun className="w-5 h-5" />
+            <span className="text-[10px] uppercase tracking-tighter font-bold">Éclipses</span>
+          </button>
           
           <button
             onClick={() => setView('journal')}
             className={cn(
-              "flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-all",
+              "flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-all",
               view === 'journal' ? "bg-white/10 text-moon-glow" : "text-slate-500 hover:text-slate-300"
             )}
           >
